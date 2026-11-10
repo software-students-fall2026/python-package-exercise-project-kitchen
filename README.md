@@ -2,18 +2,66 @@
 
 [![Build and test](https://github.com/software-students-fall2026/python-package-exercise-project-kitchen/actions/workflows/build.yml/badge.svg)](https://github.com/software-students-fall2026/python-package-exercise-project-kitchen/actions/workflows/build.yml)
 
-Translate English into silly joke languages like Pig Latin and Baby Talk, and back again. Also translate any language into a random text of the same length, and back again. 
+Translate English into silly joke languages like Pig Latin and Baby Talk, and back again. Also translate any language into a random text of the same length, and back again.
 
 ## PyPI Package Page
 [Link to package page](https://pypi.org/project/pyjokelang/0.1.0/)
 
-## Setup
+## Installation
 
-From the project root, install [pipenv](https://pipenv.pypa.io/) and then run:
+pyjokelang needs Python 3.14 or newer. From your own project's directory, install it into a [pipenv](https://packaging.python.org/en/latest/tutorials/managing-dependencies/#managing-dependencies) virtual environment:
 
 ```bash
-pipenv install --dev
+pipenv install pyjokelang
 ```
+
+Or install it with pip:
+
+```bash
+pip install pyjokelang
+```
+
+## Usage
+
+Import the functions you want into your own code:
+
+```python
+from pyjokelang import (
+    baby_talk,
+    cat_talk,
+    english_sentence_to_pig_latin,
+    pig_latin_sentence_to_english,
+    random_caps,
+    scramble,
+    unscramble,
+)
+```
+
+Each function is documented in its own section below. For a complete program that uses every function, see [`examples/example.py`](./examples/example.py).
+
+## Command line
+
+Installing pyjokelang also adds a `pyjokelang` command:
+
+```bash
+pyjokelang <command> TEXT
+```
+
+| Command | What it does |
+|---|---|
+| `to-pig-latin` | English → Pig Latin |
+| `from-pig-latin` | Pig Latin → English |
+| `baby-talk` | English → Baby Talk (`--intensity 0`, `1` or `2`) |
+| `scramble` | Text → gibberish (optional `--key`) |
+| `unscramble` | Gibberish → text (use the same `--key`) |
+| `random-caps` | Randomly capitalize each letter |
+| `cat-talk` | Replace every word with a cat sound |
+
+Run `pyjokelang --help` to list the commands, or `pyjokelang <command> --help` to see a command's options.
+
+If the `pyjokelang` command isn't found (for example on Windows, where pip's scripts folder may not be on your PATH), use `python -m pyjokelang` instead. It works exactly the same way.
+
+
 ## Pig Latin Rules
  
 > Confirm with Jade in order to ensure our methods match each other and follow the same rules
@@ -121,7 +169,6 @@ pyjokelang scramble 'Meet me at noon!' --key tacos
 pyjokelang unscramble 'F agehe vbh!gx n' --key tacos
 ```
 
-See [`examples/example.py`](./examples/example.py) for a complete program.
 
 
 ## Baby Talk
@@ -288,6 +335,47 @@ pyjokelang random-caps "Python is fun"
 ```
 
 The output varies each time because capitalization is randomized.
+
+
+## Contributing
+
+These steps work the same on macOS, Linux and Windows. You need Python 3.14 or newer.
+
+### Set up
+
+[Install pipenv](https://packaging.python.org/en/latest/tutorials/managing-dependencies/#managing-dependencies) if you don't have it yet. Then clone the repository and install the dependencies from the project root:
+
+```bash
+git clone https://github.com/software-students-fall2026/python-package-exercise-project-kitchen.git
+cd python-package-exercise-project-kitchen
+pipenv install --dev
+```
+
+This installs the development tools and the package itself in editable mode, so your code changes take effect without reinstalling. No environment variables or secret configuration files are needed.
+
+### Run the tests
+
+```bash
+pipenv run python -m pytest
+```
+
+### Lint
+
+The code must follow the PEP 8 style guide. Check it with pylint:
+
+```bash
+pipenv run pylint src tests examples
+```
+
+### Build
+
+```bash
+pipenv run python -m build
+```
+
+The package files are created in the `dist/` folder.
+
+GitHub Actions runs the tests, the linter and the build on Python 3.14 and 3.15 for every pull request to `main`. Make sure all three pass locally before you open a pull request.
 
 
 ## Team Members
