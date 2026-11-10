@@ -26,7 +26,7 @@ def swap_char(char):
     return char
 
 def swap_letters(word, intensity):
-    """Switches the necessary shars in English to baby talk"""
+    """switches the necessary chars in English to baby talk"""
     # first checks if word is in keyword swap. if yes, we just return new word
     # and don't worry about swapping single or double letters
     return_phrase = ""
@@ -59,8 +59,22 @@ def swap_letters(word, intensity):
             i+=1
     return return_phrase
 
-def baby_talk(normal_phrase, intensity):
+def baby_talk(normal_phrase, intensity=1):
     """Converts a normal phrase to baby talk"""
+    # default intensity is 1!
+
+    if not isinstance(normal_phrase, str):
+        raise TypeError("normal_phrase must be a string")
+    if not all(
+        (char.isascii() and char.isalpha()) or char.isspace()
+        for char in normal_phrase
+    ):
+        raise ValueError("normal_phrase may only contain letters and spaces")
+    if not isinstance(intensity, int) or isinstance(intensity, bool):
+        raise TypeError("intensity must be an integer")
+    if intensity not in (0, 1, 2):
+        raise ValueError("intensity must be 0, 1, or 2")
+    # finished input validation above
     normal_words = normal_phrase.split()
     baby_phrase = []
     for word in normal_words:
