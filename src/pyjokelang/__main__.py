@@ -177,6 +177,7 @@ def _build_parser():
     _add_scramble(subparsers)
     _add_unscramble(subparsers)
     _add_random_caps(subparsers)
+    _add_cat_talk(subparsers)
     return parser
 
 
