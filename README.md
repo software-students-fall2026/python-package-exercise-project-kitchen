@@ -337,6 +337,92 @@ pyjokelang random-caps "Python is fun"
 The output varies each time because capitalization is randomized.
 
 
+## Cat Talk
+ 
+`cat_talk` turns every word in a sentence into a random cat sound, while keeping the sentence's spacing, numbers and punctuation.
+ 
+### Cat Talk Rules
+ 
+The function finds each word in the input text and applies the following rules:
+ 
+1. **Words:** Each word is replaced with a random cat sound. The default sounds are `meow`, `purr`, `hiss`, `mrrp`, `mew`, `nya`, `prrr`, `yowl` and `mrow`.
+2. **Word count:** The result always has the same number of words as the input. A contraction like `don't` counts as one word, and each part of a hyphenated word like `well-known` counts as its own word.
+3. **Capitalization:** A capitalized word becomes a capitalized sound, and an all-caps word becomes an all-caps sound. A single capital letter, like `I`, becomes a capitalized sound.
+4. **Non-alphabetic characters:** Spaces, numbers, and punctuation remain unchanged.
+5. **Randomness:** Running the function multiple times on the same text may produce different results.
+6. **Empty strings:** An empty string returns an empty string.
+### Examples
+ 
+```python
+from pyjokelang import cat_talk
+ 
+cat_talk("Hello world!")
+# 'Mrrp mrow!'
+ 
+cat_talk("Hello world!")
+# 'Mew nya!'
+ 
+cat_talk("I LOVE my cat.")
+# 'Nya HISS prrr meow.'
+ 
+cat_talk("Don't stop, keep going!")
+# 'Yowl mrow, yowl yowl!'
+ 
+cat_talk("I have 3 cats?!", sounds=["meow"])
+# 'Meow meow 3 meow?!'
+ 
+cat_talk("Feed me now", sounds=("purr", "hiss"))
+# 'Purr purr hiss'
+ 
+cat_talk("123! @#$")
+# '123! @#$'
+ 
+cat_talk("")
+# ''
+```
+ 
+Note: The outputs above are examples. Actual sounds vary randomly each time the function is called, unless `sounds` has only one sound.
+ 
+### `cat_talk(text, sounds=CAT_SOUNDS)`
+ 
+Replaces each word in `text` with a random cat sound and returns the modified string.
+ 
+| **Argument** | **Description** |
+| ------------ | --------------- |
+| `text` | The string whose words will be replaced with cat sounds. |
+| `sounds` | Optional list or tuple of cat sounds to choose from. Defaults to `CAT_SOUNDS`, the nine sounds listed in the rules above. |
+ 
+### How It Works
+ 
+1. **Validate the input.** Check that `text` is a string and that `sounds` isn't empty. If not, raise an error.
+2. **Find each word.** Use a regular expression to find every run of letters, including apostrophes inside a word.
+3. **Pick a sound.** For each word, randomly choose a sound from `sounds` using `random.choice()`.
+4. **Match the capitalization.** Make the sound all caps or capitalized if the original word was.
+5. **Preserve other characters.** Leave spaces, numbers, and punctuation unchanged, and return the result.
+### Errors
+ 
+The function raises:
+ 
+- `TypeError` if `text` is not a string.
+- `ValueError` if `sounds` is empty.
+### Limitations
+ 
+`cat_talk` is not reversible because every word is replaced with a random sound, so the original words can't be recovered.
+ 
+ 
+### From the Command Line
+ 
+```bash
+pyjokelang cat-talk "Hello world!"
+# Mrrp mrow!
+ 
+pyjokelang cat-talk "I LOVE my cat."
+# Nya HISS prrr meow.
+```
+ 
+The output varies each time because the sounds are randomized.
+
+
 ## Contributing
 
 These steps work the same on macOS, Linux and Windows. You need Python 3.14 or newer.
