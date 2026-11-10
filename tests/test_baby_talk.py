@@ -1,7 +1,4 @@
 """Tests for the baby talk function"""
-
-import pytest
-
 from pyjokelang.baby_talk import baby_talk
 
 # test intensity 0 - basic

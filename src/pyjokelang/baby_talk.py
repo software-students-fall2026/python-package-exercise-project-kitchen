@@ -22,8 +22,7 @@ def swap_char(char):
     if char.lower() in letter_swap:
         if char.isupper():
             return letter_swap[char.lower()].upper()
-        else:
-            return letter_swap[char.lower()]
+        return letter_swap[char.lower()]
     return char
 
 def swap_letters(word, intensity):
