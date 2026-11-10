@@ -12,6 +12,7 @@ Commands:
     scramble          text -> gibberish           scrambler.scramble
     unscramble        gibberish -> text           scrambler.unscramble
     random-caps       text -> rAnDoM cApS         random_caps.random_caps
+    cat-talk          text -> meow purr hiss      cat_talk.cat_talk
 
 Functions are looked up by name when a command runs, so a command whose
 function hasn't been written yet prints a friendly error instead of
@@ -148,6 +149,18 @@ def _add_random_caps(subparsers):
     _add_text_argument(parser)
     parser.set_defaults(
         func=lambda args: _call("random_caps", "random_caps", _text(args))
+    )
+
+def _add_cat_talk(subparsers):
+    """Register the 'cat-talk' command."""
+    parser = subparsers.add_parser(
+        "cat-talk",
+        help="turn every word into a random cat sound",
+        description="Turn every word into a random cat sound.",
+    )
+    _add_text_argument(parser)
+    parser.set_defaults(
+        func=lambda args: _call("cat_talk", "cat_talk", _text(args))
     )
 
 
