@@ -1,7 +1,7 @@
+"""Baby Talk - Turns normal english into how a baby speaks"""
+
 # baby talk function turns regular words into baby talk by changing
 # the letters to phonetically match how baby talk sounds
-
-"""Baby Talk - Turns normal english into how a baby speaks"""
 
 # Intensity Level 0: ONLY swaps letters, not full words
 letter_swap = {"r":"w", "l":"w", "v":"b"}
