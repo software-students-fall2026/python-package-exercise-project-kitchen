@@ -114,6 +114,15 @@ Scrambling happens in two steps:
 
 `unscramble` undoes the two steps in reverse order.
 
+### From the command line
+
+```bash
+pyjokelang scramble 'Meet me at noon!' --key tacos
+pyjokelang unscramble 'F agehe vbh!gx n' --key tacos
+```
+
+See [`examples/example.py`](./examples/example.py) for a complete program.
+
 
 ## Baby Talk
 
@@ -191,14 +200,95 @@ Converts `normal_phrase` into baby talk using the specified intensity level and 
 4. **Apply extreme transformations.** At intensity level 2, two-letter combinations (`th` and `ch`) are checked before individual letters to ensure the correct replacements.
 5. **Reconstruct the phrase.** The translated words are joined with single spaces, without leading or trailing whitespace, and the resulting phrase is returned.
 
-### From the command line
+### From the Command Line
 
 ```bash
-pyjokelang scramble 'Meet me at noon!' --key tacos
-pyjokelang unscramble 'F agehe vbh!gx n' --key tacos
+pyjokelang baby-talk "Hello world" --intensity 0
+# Hewwo wowwd
+
+pyjokelang baby-talk "Water please" --intensity 1
+# Wawa pwease
+
+pyjokelang baby-talk "The children love chocolate" --intensity 2
+# De tiwdwen wobe tocowate
 ```
 
-See [`examples/example.py`](./examples/example.py) for a complete program.
+## Random Capitalization
+
+`random_caps` randomly changes the capitalization of letters in a string, creating text with a mix of uppercase and lowercase letters.
+
+### Random Capitalization Rules
+
+The function goes through each character in the input text and applies the following rules:
+
+1. **Letters:** Each letter is randomly converted to either uppercase or lowercase.
+2. **Non-alphabetic characters:** Spaces, numbers, and punctuation remain unchanged.
+3. **Original capitalization:** The original capitalization is ignored, and each letter has an equal chance of being uppercase or lowercase.
+4. **Randomness:** Running the function multiple times on the same text may produce different results.
+5. **Empty strings:** An empty string returns an empty string.
+
+### Examples
+
+```python
+from pyjokelang import random_caps
+
+random_caps("Hello world!")
+# 'hELLo WoRLd!'
+
+random_caps("Hello world!")
+# 'HeLlO wOrLD!'
+
+random_caps("Python is fun")
+# 'pYtHoN Is FuN'
+
+random_caps("123! @#$")
+# '123! @#$'
+
+random_caps("")
+# ''
+```
+
+Note: The outputs above are examples. Actual capitalization varies randomly each time the function is called.
+
+### `random_caps(text)`
+
+Randomly changes the capitalization of each letter in `text` and returns the modified string.
+
+| **Argument** | **Description** |
+| ------------ | --------------- |
+| `text` | The string whose letters will be randomly capitalized. |
+
+### How It Works
+
+1. **Validate the input.** Check that `text` is a string. If not, raise a `TypeError`.
+2. **Check each character.** Iterate through every character in the input string.
+3. **Randomize capitalization.** For alphabetic characters, randomly choose between the lowercase and uppercase versions using `random.choice()`.
+4. **Preserve other characters.** Leave spaces, numbers, and punctuation unchanged.
+5. **Reconstruct the string.** Join all processed characters together and return the result.
+
+### Errors
+
+The function raises:
+
+- `TypeError` if `text` is not a string.
+
+### Limitations
+
+`random_caps` is not reversible because it does not preserve the original capitalization. Running the function again will generate another random capitalization pattern rather than restoring the original text.
+
+
+### From the Command Line
+
+```bash
+pyjokelang random-caps "Hello world!"
+# hELLo WoRLd!
+
+pyjokelang random-caps "Python is fun"
+# pYtHoN Is FuN
+```
+
+The output varies each time because capitalization is randomized.
+
 
 ## Team Members
 - [Jade Leong](https://github.com/jade-leong)
