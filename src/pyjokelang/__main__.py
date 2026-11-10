@@ -8,7 +8,7 @@ Run it with either:
 Commands:
     to-pig-latin      English -> Pig Latin        pig_latin.english_sentence_to_pig_latin
     from-pig-latin    Pig Latin -> English        pig_latin.pig_latin_sentence_to_english
-    baby-talk         English -> Baby Talk        baby_talk.babytalk
+    baby-talk         English -> Baby Talk        baby_talk.baby_talk
     scramble          text -> gibberish           scrambler.scramble
     unscramble        gibberish -> text           scrambler.unscramble
     random-caps       text -> rAnDoM cApS         random_caps.random_caps
@@ -105,8 +105,17 @@ def _add_baby_talk(subparsers):
         description="Translate English into Baby Talk.",
     )
     _add_text_argument(parser)
+    parser.add_argument(
+        "-i",
+        "--intensity",
+        type=int,
+        choices=(0, 1, 2),
+        default=1,
+        help="0 = letter swaps only, 1 = also swap whole words, "
+        "2 = also swap 'th' and 'ch' (default: 1)",
+    )
     parser.set_defaults(
-        func=lambda args: _call("baby_talk", "babytalk", _text(args))
+        func=lambda args: _call("baby_talk", "baby_talk", _text(args), args.intensity)
     )
 
 
