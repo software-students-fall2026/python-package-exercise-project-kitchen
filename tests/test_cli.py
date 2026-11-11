@@ -1,6 +1,9 @@
 """Tests for the pyjokelang command-line interface."""
 
+from unittest.mock import patch
+
 from pyjokelang.__main__ import main
+from pyjokelang.cat_talk import CAT_SOUNDS
 
 
 def run_cli(capsys, *argv):
@@ -93,3 +96,46 @@ class Tests:
         assert out == "Hobellobo woborld\n", (
             f"Expected the custom 'ob' prefix. Instead, it printed {out!r}"
         )
+
+    def test_random_caps(self, capsys):
+        """The random-caps command prints the randomly capitalized text."""
+        # always pick the uppercase option so the output is predictable
+        with patch(
+            "pyjokelang.random_caps.random.choice",
+            side_effect=lambda options: options[1],
+        ):
+            code, out, _ = run_cli(capsys, "random-caps", "Hello, world!")
+        assert code == 0, f"Expected exit code 0. Instead, it returned {code}"
+        assert out == "HELLO, WORLD!\n", (
+            f"Expected every letter in uppercase. Instead, it printed {out!r}"
+        )
+
+        # always pick the lowercase option
+        with patch(
+            "pyjokelang.random_caps.random.choice",
+            side_effect=lambda options: options[0],
+        ):
+            code, out, _ = run_cli(capsys, "random-caps", "Hello, world!")
+        assert out == "hello, world!\n", (
+            f"Expected every letter in lowercase. Instead, it printed {out!r}"
+        )
+
+    def test_cat_talk(self, capsys):
+        """The cat-talk command replaces every word with a cat sound."""
+        # always pick the first sound, "meow", so the output is predictable
+        with patch(
+            "pyjokelang.cat_talk.random.choice",
+            side_effect=lambda sounds: sounds[0],
+        ):
+            code, out, _ = run_cli(capsys, "cat-talk", "Hello, WORLD! my cat")
+        assert code == 0, f"Expected exit code 0. Instead, it returned {code}"
+        assert out == "Meow, MEOW! meow meow\n", (
+            f"Expected 'meow' with matching capitals. Instead, it printed {out!r}"
+        )
+
+        # without patching, every word still becomes one of the cat sounds
+        code, out, _ = run_cli(capsys, "cat-talk", "one two three")
+        assert all(word in CAT_SOUNDS for word in out.split()), (
+            f"Expected only cat sounds. Instead, it printed {out!r}"
+        )
+        assert len(out.split()) == 3, f"Expected 3 words. Instead, it printed {out!r}"
