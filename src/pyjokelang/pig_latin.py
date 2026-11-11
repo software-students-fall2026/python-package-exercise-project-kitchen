@@ -23,8 +23,13 @@ PROPOSED SOLUTION: Add dashes so we know where to split
 
 def english_word_to_pig_latin(text):
     """Translate a single English word into Pig Latin."""
+    if not isinstance(text, str):
+        raise TypeError("Input must be a string")
+    if not text:
+        raise ValueError("Word cannot be empty")
     if not text:
         return ""
+    
     vowels = "aeiou"
     word = text
     # if the first letter is a vowel, keep that here
@@ -37,6 +42,8 @@ def english_word_to_pig_latin(text):
 
 def english_sentence_to_pig_latin(text):
     """Translate an entire English sentence into Pig Latin."""
+    if not isinstance(text, str):
+        raise TypeError("Input must be a string")
     translated_words = []
     words = text.split()
     for word in words:

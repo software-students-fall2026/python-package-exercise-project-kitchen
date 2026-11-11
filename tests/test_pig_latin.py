@@ -51,10 +51,25 @@ class TestPigLatin:
         assert english_sentence_to_pig_latin("hello   world") == "ELLOH-AY ORLDW-AY"
 
     def test_word_invalid_input(self):
-        """Placeholder for invalid word input tests."""
+        """Invalid word types and empty words raise errors."""
+        with pytest.raises(TypeError):
+            english_word_to_pig_latin(123)
+        with pytest.raises(TypeError):
+            english_word_to_pig_latin(None)
+        with pytest.raises(TypeError):
+            english_word_to_pig_latin(["hello"])
+        with pytest.raises(ValueError):
+            english_word_to_pig_latin("")
+
 
     def test_sentence_invalid_input(self):
-        """Placeholder for invalid sentence input tests."""
+        """Invalid sentence types raise errors."""
+        with pytest.raises(TypeError):
+            english_sentence_to_pig_latin(123)
+        with pytest.raises(TypeError):
+            english_sentence_to_pig_latin(None)
+        with pytest.raises(TypeError):
+            english_sentence_to_pig_latin(["hello", "world"])
 
 class TestPigLatinToEnglish:
     """Unit tests for Pig Latin to English functions."""
