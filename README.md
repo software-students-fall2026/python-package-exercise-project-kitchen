@@ -5,7 +5,7 @@
 pyjokelang is a Python package that turns regular text into silly languages like Pig Latin, Baby Talk, Ubbi Dubbi, and Cat Talk. It also includes functions for scrambling and unscrambling messages and randomly changing capitalization. The package is meant to be a fun way to play around with text using Python.
 
 ## PyPI Package Page
-[Link to package page](https://pypi.org/project/pyjokelang/0.1.0/)
+[Link to package page](https://pypi.org/project/pyjokelang/)
 
 ## Installation
 
@@ -62,48 +62,71 @@ Run `pyjokelang --help` to list the commands, or `pyjokelang <command> --help` t
 If the `pyjokelang` command isn't found (for example on Windows, where pip's scripts folder may not be on your PATH), use `python -m pyjokelang` instead. It works exactly the same way.
 
 
-## Pig Latin Rules
-  
-`to_pig_latin` and `from_pig_latin` follow these rules, so any text translated into Pig Latin can be translated back.
- 
+
+## Pig Latin
+
+`english_sentence_to_pig_latin` translates English text into Pig Latin, while `pig_latin_sentence_to_english` translates it back. The translator changes the order of letters in each word and uses helper functions to modify capitalization and punctuation.
+
 ### Translating English to Pig Latin
- 
-The vowels are a, e, i, o and u. **Y never counts as a vowel.**
- 
-1. **Words starting with a consonant:** Move the first letter to the end of the word and add -ay.
-2. **Words starting with a vowel:** Keep the word unchanged and add -way.
-3. **Capitals:** The word translator preserves the original capitalization of letters, while the sentence translator reverses uppercase and lowercase letters using the reverse_capitalization() helper.
-4. **Punctuation:** The sentence translator uses reverse_punctuation() to change ! to ., . to ?, and ? to !. Other characters remain unchanged.
-5. **Full Sentences:** Split the sentence into individual words, translate each word into Pig Latin, join the translated words with spaces, and apply the capitalization and punctuation helpers.
+
+The vowels are `a`, `e`, `i`, `o`, and `u`. **Y never counts as a vowel.**
+
+1. **Words starting with a consonant:** Move the first letter to the end of the word and add `-ay`.
+2. **Words starting with a vowel:** Keep the word unchanged and add `-way`.
+3. **Capitalization:** The word translator preserves the original capitalization of individual letters, while the sentence translator reverses uppercase and lowercase letters using `reverse_capitalization()`.
+4. **Punctuation:** The sentence translator uses `reverse_punctuation()` to change `!` to `.`, `.` to `?`, and `?` to `!`. Other characters remain unchanged by this helper. Punctuation attached to words may move during translation.
+5. **Full sentences:** Split the sentence into individual words, translate each word into Pig Latin, join the translated words with spaces, and apply the capitalization and punctuation helpers.
 6. **Whitespace:** Multiple spaces between words are reduced to single spaces. Empty sentences return an empty string.
 
+### Translating Pig Latin Back to English
 
-### Translating Pig Latin back to English
- 
-**Finding translated words:** a translated word has letters containing at least one vowel, then a dash, then any moved letters, then `ay`. Anything else stays unchanged.
- 
+`pig_latin_sentence_to_english` reverses the capitalization and punctuation transformations before translating each word back into English.
+
 For each translated word:
- 
-1. **Remove only the final `ay`** (or `AY`) after the dash. Any "ay" before the dash belongs to the word, so `ay-way` becomes `way`.
-2. **Move the letters back:** put the letters between the dash and the final `ay` in front of the letters before the dash, and remove the dash. If there are no letters between them, the word started with a vowel, so just remove `-ay`.
-3. **Restore the capitalization** using the first matching rule:
-   - **All caps:** if the whole word is in capitals, keep the whole result in capitals.
-   - **Capitalized:** if only the first letter is a capital, make that letter lowercase and capitalize the new first letter of the word. If "qu" moved back, only the `q` becomes a capital.
-   - **Lowercase:** keep the whole result in lowercase.
-   
-| Pig Latin | English | What happens |
-|---|---|---|
-| ing-stray | string | `str` moves back in front of `ing` |
-| es-yay | yes | a moved `y` goes back to the front like any consonant |
-| apple-ay | apple | no moved letters, so only `-ay` is removed |
-| ay-way | way | only the final `ay` is removed |
-| Ello-hay | Hello | `E` becomes lowercase and `h` becomes a capital |
-| ELLO-HAY | HELLO | everything stays in capitals |
-| Apple-ay | Apple | the first letter doesn't change, so it stays a capital |
-| I-ay | I | a single-letter word keeps its capital |
-| Iet-quay | Quiet | `I` becomes lowercase and only `q` becomes a capital |
 
+1. **Words ending in `-way`:** Remove the final `-way` to recover the original vowel-starting word.
+2. **Words ending in `-ay`:** Remove the final `-ay` and move the last remaining letter back to the beginning of the word.
+3. **Other words:** If a word does not have a recognized Pig Latin suffix, leave it unchanged.
+4. **Capitalization:** The sentence translator uses `reverse_capitalization()` again to restore the original uppercase and lowercase letters.
+5. **Punctuation:** The `restore_punctuation()` helper reverses the punctuation changes made during translation.
 
+The translator is designed to translate text in both directions, although certain punctuation placements and unusual word patterns may not round-trip correctly.
+
+### Translation Examples
+
+| **English** | **Pig Latin (Word Translation)** | **What Happens** |
+| ----------- | -------------------------------- | ---------------- |
+| hello | elloh-ay | `h` moves to the end |
+| world | orldw-ay | `w` moves to the end |
+| apple | apple-way | Starts with a vowel |
+| string | trings-ay | Only the first consonant moves |
+| yes | esy-ay | `y` is treated as a consonant |
+| Quiet | uietQ-ay | The original capital `Q` moves to the end |
+
+### `english_sentence_to_pig_latin(text)`
+
+Translates an English sentence into Pig Latin and returns the modified string.
+
+| **Argument** | **Description** |
+| ------------ | --------------- |
+| `text` | The English sentence to translate into Pig Latin. |
+
+### `pig_latin_sentence_to_english(text)`
+
+Translates a Pig Latin sentence back into English and returns the result.
+
+| **Argument** | **Description** |
+| ------------ | --------------- |
+| `text` | The Pig Latin sentence to translate back into English. |
+
+### How It Works
+
+1. **Split the sentence.** Separate the input text into individual words.
+2. **Translate each word.** Check whether the first letter is a vowel or consonant and apply the corresponding Pig Latin rule.
+3. **Reconstruct the sentence.** Join the translated words with single spaces.
+4. **Transform punctuation.** Apply `reverse_punctuation()` to change punctuation marks.
+5. **Reverse capitalization.** Apply `reverse_capitalization()` to swap uppercase and lowercase letters.
+6. **Translate back.** To recover the original sentence, reverse the capitalization and punctuation changes, remove the Pig Latin suffixes, and move consonants back to the beginning of their words.
 
 ### Examples
 
@@ -113,18 +136,27 @@ from pyjokelang import (
     pig_latin_sentence_to_english
 )
 
+# Translate English into Pig Latin
 english_sentence_to_pig_latin("Hello world")
 # 'ELLOh-AY ORLDW-AY'
-
-pig_latin_sentence_to_english("ELLOh-AY ORLDW-AY")
-# 'Hello world'
 
 english_sentence_to_pig_latin("Apple")
 # 'aPPLE-WAY'
 
+english_sentence_to_pig_latin("string")
+# 'TRINGS-AY'
+
+# Translate Pig Latin back into English
+pig_latin_sentence_to_english("ELLOh-AY ORLDW-AY")
+# 'Hello world'
+
 pig_latin_sentence_to_english("aPPLE-WAY")
 # 'Apple'
 
+pig_latin_sentence_to_english("TRINGS-AY")
+# 'string'
+
+# Empty strings
 english_sentence_to_pig_latin("")
 # ''
 
@@ -136,8 +168,21 @@ pig_latin_sentence_to_english("")
 
 ```bash
 pyjokelang to-pig-latin "Hello world"
-pyjokelang from-pig-latin "Ello-hay orld-way"
+# ELLOh-AY ORLDW-AY
+
+pyjokelang from-pig-latin "ELLOh-AY ORLDW-AY"
+# Hello world
+
+pyjokelang to-pig-latin "Apple"
+# aPPLE-WAY
+
+pyjokelang from-pig-latin "aPPLE-WAY"
+# Apple
 ```
+
+## Ubbi Dubbi
+
+Coming soon. Placeholder section
 
 
 ## Scramble and Unscramble
