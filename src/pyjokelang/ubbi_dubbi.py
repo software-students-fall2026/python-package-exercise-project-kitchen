@@ -1,16 +1,15 @@
 """Ubbi Dubbi is a famous English language game and coded 'secret language' """
 
-vowels = "aeiou"
-vowels_with_y = "aeiouy"
+VOWELS = "aeiou"
 
 def find_vowels(word):
     """Return a (start, end) pair for each string of consecutive vowels."""
     vowel_string = []
     i = 0
     while i < len(word):
-        if word[i].lower() in vowels:
+        if word[i].lower() in VOWELS:
             start = i
-            while i < len(word) and word[i].lower() in vowels:
+            while i < len(word) and word[i].lower() in VOWELS:
                 i += 1
             vowel_string.append((start, i))
         else:
@@ -29,10 +28,27 @@ def insert_prefix(prefix, vowel_string, start, uppercase):
 # now need actual function to use insert prefix and convert each word to ubbi dubbi
 def convert_word(word, prefix):
     """Changes one word to Ubbi Dubbi"""
-
-
-
-
+    vstr = find_vowels(word) # returns array of consecutive vowels
+    prev_end=0
+    uppercase = word.isupper() and len(word) > 1
+    ui_phrase = []
+    for index, (start, end) in enumerate(vstr):
+        split_word = word[start:end]
+        silent_e = (
+            len(vstr) > 1 # prevents words with only one vowel being classified as silent_e
+            # then make sure last letter is e
+            and index == len(vstr) - 1
+            and end == len(word)
+            and split_word.lower() == "e"
+        )
+        ui_phrase.append(word[prev_end:start])
+        if silent_e:
+            ui_phrase.append(split_word)
+        else:
+            ui_phrase.append(insert_prefix(prefix, split_word, start == 0, uppercase))
+        prev_end = end
+    ui_phrase.append(word[prev_end:])
+    return "".join(ui_phrase)
 
 
 
@@ -50,4 +66,4 @@ def ubbi_dubbi(phrase, prefix="ub"):
         raise TypeError("prefix must be a string")
     if not (prefix.isascii() and prefix.isalpha()):
         raise ValueError("prefix must be one or more letters")
-    return " ".join(_convert_word(word, prefix) for word in phrase.split())
+    return " ".join(convert_word(word, prefix) for word in phrase.split())
