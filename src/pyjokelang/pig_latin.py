@@ -29,7 +29,6 @@ def english_word_to_pig_latin(text):
         raise ValueError("Word cannot be empty")
     if not text:
         return ""
-    
     vowels = "aeiou"
     word = text
     # if the first letter is a vowel, keep that here
