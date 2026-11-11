@@ -34,6 +34,7 @@ from pyjokelang import (
     random_caps,
     scramble,
     unscramble,
+    ubbi_dubbi
 )
 ```
 
@@ -56,6 +57,7 @@ pyjokelang <command> TEXT
 | `unscramble` | Gibberish → text (use the same `--key`) |
 | `random-caps` | Randomly capitalize each letter |
 | `cat-talk` | Replace every word with a cat sound |
+| `ubbi-dubbi` | English → Ubbi Dubbi (optional `--prefix`)|
 
 Run `pyjokelang --help` to list the commands, or `pyjokelang <command> --help` to see a command's options.
 
@@ -220,8 +222,94 @@ pyjokelang from-pig-latin "aPPLE-WAY"
 
 ## Ubbi Dubbi
 
-Coming soon. Placeholder section
+`ubbi_dubbi` converts English text into Ubbi Dubbi, a real English word game. It inserts a prefix, `ub` by default, before every group of vowels in each word, so "hello" becomes "hubellubo".
 
+### Ubbi Dubbi Rules
+
+1. **Vowel groups:** The vowels are `a`, `e`, `i`, `o`, and `u`. A run of consecutive vowels counts as one group and gets one prefix, so `speak` becomes `spubeak`.
+2. **The letter `y`:** `y` counts as a vowel when it comes right after a consonant (`my` → `muby`). It is a consonant at the start of a word or right after a vowel (`yes` → `yubes`, `play` → `plubay`).
+3. **Silent e:** A final `e` is left alone if the word has another vowel group (`make` → `mubake`). If it is the only vowel group, or part of a longer group like `ee`, it still gets a prefix (`me` → `mube`, `agree` → `ubagrubee`).
+4. **Capitalization:** If a word starts with a capital vowel, the capital moves to the prefix (`Apple` → `Ubapple`). All-caps words get an all-caps prefix (`HELLO` → `HUBELLUBO`). Other capitals stay where they are.
+5. **Whitespace:** Multiple spaces between words are reduced to single spaces. No leading or trailing whitespace is included in the output. Empty strings return an empty string.
+6. **Words with no vowel groups** (like `shh`) are unchanged.
+7. **Input restrictions:** Only English letters and whitespace are accepted. No numbers or punctuation allowed.
+
+### `ubbi_dubbi(phrase, prefix="ub")`
+
+Converts `phrase` into Ubbi Dubbi and returns the modified string.
+
+| **Argument** | **Description** |
+| ------------ | --------------- |
+| `phrase` | The English text to convert. Accepts English letters and whitespace only. |
+| `prefix` | Optional text inserted before each vowel group. Must be one or more English letters. Defaults to `"ub"`. Try `"ob"` or `"ib"` for other versions of the game. |
+
+### Errors
+
+The function raises:
+
+- `TypeError` if `phrase` is not a string.
+- `TypeError` if `prefix` is not a string.
+- `ValueError` if `phrase` contains numbers, punctuation, or other unsupported characters.
+- `ValueError` if `prefix` is empty or contains anything other than English letters.
+
+### How It Works
+
+1. **Validate the input.** Check that `phrase` and `prefix` are valid.
+2. **Split the phrase.** The input text is split into individual words.
+3. **Find vowel groups.** Each word is scanned for runs of consecutive vowels, using the `y` rule above.
+4. **Insert the prefix.** The prefix is placed before each vowel group, matching the word's capitalization. A silent final `e` is skipped.
+5. **Reconstruct the phrase.** The converted words are joined with single spaces.
+
+### Limitations
+
+The silent `e` and `y` rules are based on spelling, not pronunciation, so some words come out differently than they sound. For example, `canyon` becomes `cubanubyon`, because the `y` is treated as a vowel.
+
+### Examples
+
+```python
+from pyjokelang import ubbi_dubbi
+
+ubbi_dubbi("Hello world")
+# 'Hubellubo wuborld'
+
+# One prefix per group of vowels
+ubbi_dubbi("speak")
+# 'spubeak'
+
+# Silent e
+ubbi_dubbi("make")
+# 'mubake'
+
+# Capitalization
+ubbi_dubbi("Apple HELLO")
+# 'Ubapple HUBELLUBO'
+
+# The letter y
+ubbi_dubbi("my yes play")
+# 'muby yubes plubay'
+
+# Custom prefix
+ubbi_dubbi("Hello world", prefix="ob")
+# 'Hobellobo woborld'
+
+# Multiple spaces
+ubbi_dubbi("Hello   world")
+# 'Hubellubo wuborld'
+
+# Empty string
+ubbi_dubbi("")
+# ''
+```
+
+### From the Command Line
+
+```bash
+pyjokelang ubbi-dubbi "Hello world"
+# Hubellubo wuborld
+
+pyjokelang ubbi-dubbi "Hello world" --prefix ob
+# Hobellobo woborld
+```
 
 ## Scramble and Unscramble
 
