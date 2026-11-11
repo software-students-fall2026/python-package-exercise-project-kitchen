@@ -2,7 +2,7 @@
 
 [![Build and test](https://github.com/software-students-fall2026/python-package-exercise-project-kitchen/actions/workflows/build.yml/badge.svg)](https://github.com/software-students-fall2026/python-package-exercise-project-kitchen/actions/workflows/build.yml)
 
-Translate English into silly joke languages like Pig Latin and Baby Talk, and back again. Also translate any language into a random text of the same length, and back again.
+pyjokelang is a Python package that turns regular text into silly languages like Pig Latin, Baby Talk, Ubbi Dubbi, and Cat Talk. It also includes functions for scrambling and unscrambling messages and randomly changing capitalization. The package is meant to be a fun way to play around with text using Python.
 
 ## PyPI Package Page
 [Link to package page](https://pypi.org/project/pyjokelang/0.1.0/)
@@ -63,9 +63,7 @@ If the `pyjokelang` command isn't found (for example on Windows, where pip's scr
 
 
 ## Pig Latin Rules
- 
-> Confirm with Jade in order to ensure our methods match each other and follow the same rules
- 
+  
 `to_pig_latin` and `from_pig_latin` follow these rules, so any text translated into Pig Latin can be translated back.
  
 ### Translating English to Pig Latin
@@ -104,6 +102,43 @@ For each translated word:
 | Apple-ay | Apple | the first letter doesn't change, so it stays a capital |
 | I-ay | I | a single-letter word keeps its capital |
 | Iet-quay | Quiet | `I` becomes lowercase and only `q` becomes a capital |
+
+
+
+### Examples
+
+```python
+from pyjokelang import (
+    english_sentence_to_pig_latin,
+    pig_latin_sentence_to_english
+)
+
+english_sentence_to_pig_latin("Hello world")
+# 'ELLOh-AY ORLDW-AY'
+
+pig_latin_sentence_to_english("ELLOh-AY ORLDW-AY")
+# 'Hello world'
+
+english_sentence_to_pig_latin("Apple")
+# 'aPPLE-WAY'
+
+pig_latin_sentence_to_english("aPPLE-WAY")
+# 'Apple'
+
+english_sentence_to_pig_latin("")
+# ''
+
+pig_latin_sentence_to_english("")
+# ''
+```
+
+### From the Command Line
+
+```bash
+pyjokelang to-pig-latin "Hello world"
+pyjokelang from-pig-latin "Ello-hay orld-way"
+```
+
 
 ## Scramble and Unscramble
 
@@ -169,8 +204,6 @@ pyjokelang scramble 'Meet me at noon!' --key tacos
 pyjokelang unscramble 'F agehe vbh!gx n' --key tacos
 ```
 
-
-
 ## Baby Talk
 
 `baby_talk` converts normal English text into baby talk by replacing letters and common words to imitate how a baby might speak. The function supports three intensity levels, allowing users to choose how much their text is transformed.
@@ -183,13 +216,13 @@ The function applies different transformations depending on the selected intensi
    - `r` → `w`
    - `l` → `w`
    - `v` → `b`
-2. **Intensity 1 (Intermediate):** Applies all basic letter replacements and replaces certain full words with baby talk equivalents.
+2. **Intensity 1 (Intermediate):** Applies all basic letter replacements and replaces certain full words with baby talk equivalents. This is the default intensity level.
 3. **Intensity 2 (Extreme):** Applies all previous transformations and additionally replaces letter combinations:
    - `th` → `d`
    - `ch` → `t`
 4. **Capitalization:** Letter replacements preserve the original capitalization. Full-word replacements capitalize the first letter if the original word starts with a capital.
 5. **Whitespace:** Multiple spaces between words are reduced to single spaces. No leading or trailing whitespace is included in the output. Empty strings return an empty string.
-6. **Punctuation:** Punctuation is preserved during letter replacements. However, full-word replacements only occur when the word matches a keyword exactly, without punctuation.
+6. **Input restrictions:** Only English letters and whitespace are accepted. No numbers or punctuation allowed — babies don't know what those are yet!
 
 ### Full-Word Replacements
 
@@ -203,49 +236,66 @@ At intensity levels 1 and 2, the following words are replaced before individual 
 | mother | mama |
 | father | dada |
 
-### Examples
-
-```python
-from pyjokelang import baby_talk
-
-baby_talk("Hello world", 0)
-# 'Hewwo wowwd'
-
-baby_talk("Hello world", 1)
-# 'Hewwo wowwd'
-
-baby_talk("Water please", 1)
-# 'Wawa pwease'
-
-baby_talk("The children love chocolate", 2)
-# 'De tiwdwen wobe tocowate'
-
-baby_talk("Mother and father", 2)
-# 'Mama and dada'
-
-baby_talk("Hello   world", 0)
-# 'Hewwo wowwd'
-
-baby_talk("", 0)
-# ''
-```
-
-### `baby_talk(normal_phrase, intensity)`
+### `baby_talk(normal_phrase, intensity=1)`
 
 Converts `normal_phrase` into baby talk using the specified intensity level and returns the modified string.
 
 | **Argument** | **Description** |
 | ------------ | --------------- |
-| `normal_phrase` | The English text to convert into baby talk. |
-| `intensity` | The transformation level: `0` for basic letter swaps, `1` for letter and full-word swaps, or `2` for extreme transformations. |
+| `normal_phrase` | The English text to convert into baby talk. Accepts English letters and whitespace only. |
+| `intensity` | Optional transformation level: `0` for basic letter swaps, `1` for letter and full-word swaps, or `2` for extreme transformations. Defaults to `1`. |
+
+### Errors
+
+The function raises:
+
+- `TypeError` if `normal_phrase` is not a string.
+- `TypeError` if `intensity` is not an integer (booleans are also rejected).
+- `ValueError` if `normal_phrase` contains numbers, punctuation, or other unsupported characters.
+- `ValueError` if `intensity` is not `0`, `1`, or `2`.
 
 ### How It Works
 
-1. **Split the phrase.** The input text is split into individual words.
-2. **Check for keywords.** At intensity levels 1 and 2, each word is checked against a dictionary of predefined baby talk replacements. If a match is found, the entire word is replaced without further letter substitutions.
-3. **Replace individual letters.** Words that do not match a keyword have their letters replaced according to the selected intensity level.
-4. **Apply extreme transformations.** At intensity level 2, two-letter combinations (`th` and `ch`) are checked before individual letters to ensure the correct replacements.
-5. **Reconstruct the phrase.** The translated words are joined with single spaces, without leading or trailing whitespace, and the resulting phrase is returned.
+1. **Validate the input.** Check that the phrase contains only English letters and whitespace, and that the intensity is a valid integer between 0 and 2.
+2. **Split the phrase.** The input text is split into individual words.
+3. **Check for keywords.** At intensity levels 1 and 2, each word is checked against a dictionary of predefined baby talk replacements. If a match is found, the entire word is replaced without further letter substitutions.
+4. **Replace individual letters.** Words that do not match a keyword have their letters replaced according to the selected intensity level.
+5. **Apply extreme transformations.** At intensity level 2, two-letter combinations (`th` and `ch`) are checked before individual letters to ensure the correct replacements.
+6. **Reconstruct the phrase.** The translated words are joined with single spaces, without leading or trailing whitespace, and the resulting phrase is returned.
+
+### Examples
+
+```python
+from pyjokelang import baby_talk
+
+# Default intensity is 1
+baby_talk("Hello world")
+# 'Hewwo wowwd'
+
+# Intensity 0: Basic letter replacements
+baby_talk("Water please", 0)
+# 'Watew pwease'
+
+# Intensity 1: Letter and full-word replacements
+baby_talk("Water please", 1)
+# 'Wawa pwease'
+
+# Intensity 2: Extreme transformations
+baby_talk("The children love chocolate", 2)
+# 'De tiwdwen wobe tocowate'
+
+# Capitalization
+baby_talk("Mother and Father", 1)
+# 'Mama and Dada'
+
+# Multiple spaces
+baby_talk("Hello   world", 1)
+# 'Hewwo wowwd'
+
+# Empty string
+baby_talk("", 1)
+# ''
+```
 
 ### From the Command Line
 
