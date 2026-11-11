@@ -50,8 +50,6 @@ def convert_word(word, prefix):
     ui_phrase.append(word[prev_end:])
     return "".join(ui_phrase)
 
-
-
 def ubbi_dubbi(phrase, prefix="ub"):
     # can alter the prefix for variations of ubbi dubbi, but "ub" is standard
     """Convert a phrase to Ubbi Dubbi by adding a prefix before vowel sounds."""
