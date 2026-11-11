@@ -104,8 +104,6 @@ This transformation adds another layer of silliness to translated sentences.
 
 ### Pig Latin Design Decisions
 
-### Design Decisions
-
 Our implementation prioritizes simplicity and readability over linguistic accuracy.
 
 For example, traditional Pig Latin sometimes moves an entire consonant cluster to the end of a word. Our translator only moves the first consonant.
