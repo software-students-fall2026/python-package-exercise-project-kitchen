@@ -2,7 +2,7 @@
 
 [![Build and test](https://github.com/software-students-fall2026/python-package-exercise-project-kitchen/actions/workflows/build.yml/badge.svg)](https://github.com/software-students-fall2026/python-package-exercise-project-kitchen/actions/workflows/build.yml)
 
-Translate English into silly joke languages like Pig Latin and Baby Talk, and back again. Also translate any language into a random text of the same length, and back again.
+pyjokelang is a Python package that turns regular text into silly languages like Pig Latin, Baby Talk, Ubbi Dubbi, and Cat Talk. It also includes functions for scrambling and unscrambling messages and randomly changing capitalization. The package is meant to be a fun way to play around with text using Python.
 
 ## PyPI Package Page
 [Link to package page](https://pypi.org/project/pyjokelang/0.1.0/)
