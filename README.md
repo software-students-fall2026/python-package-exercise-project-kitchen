@@ -62,7 +62,6 @@ Run `pyjokelang --help` to list the commands, or `pyjokelang <command> --help` t
 If the `pyjokelang` command isn't found (for example on Windows, where pip's scripts folder may not be on your PATH), use `python -m pyjokelang` instead. It works exactly the same way.
 
 
-
 ## Pig Latin
 
 `english_sentence_to_pig_latin` translates English text into Pig Latin, while `pig_latin_sentence_to_english` translates it back. The translator changes the order of letters in each word and uses helper functions to modify capitalization and punctuation.
@@ -74,9 +73,32 @@ The vowels are `a`, `e`, `i`, `o`, and `u`. **Y never counts as a vowel.**
 1. **Words starting with a consonant:** Move the first letter to the end of the word and add `-ay`.
 2. **Words starting with a vowel:** Keep the word unchanged and add `-way`.
 3. **Capitalization:** The word translator preserves the original capitalization of individual letters, while the sentence translator reverses uppercase and lowercase letters using `reverse_capitalization()`.
-4. **Punctuation:** The sentence translator uses `reverse_punctuation()` to change `!` to `.`, `.` to `?`, and `?` to `!`. Other characters remain unchanged by this helper. Punctuation attached to words may move during translation.
+4. **Punctuation:** The sentence translator uses `reverse_punctuation()` to change `!` to `.`, `.` to `?`, and `?` to `!`. 
+   * Other characters remain unchanged by this helper. Punctuation attached to words may move during translation.
 5. **Full sentences:** Split the sentence into individual words, translate each word into Pig Latin, join the translated words with spaces, and apply the capitalization and punctuation helpers.
 6. **Whitespace:** Multiple spaces between words are reduced to single spaces. Empty sentences return an empty string.
+
+### Understanding the Pig Latin Helper Functions
+
+The Pig Latin translator uses two helper functions to separate the translation process into smaller steps.
+
+**`reverse_capitalization()`**
+
+This first helper swaps the capitalization of alphabetic characters.
+
+- Uppercase letters become lowercase.
+- Lowercase letters become uppercase.
+- Numbers, spaces, and punctuation will remain unchanged.
+
+**`reverse_punctuation()`**
+
+This helper changes common sentence-ending punctuation.
+
+- Exclamation marks (`!`) become periods (`.`).
+- Periods (`.`) become question marks (`?`).
+- Question marks (`?`) become exclamation marks (`!`).
+
+This transformation adds another layer of silliness to translated sentences.
 
 ### Translating Pig Latin Back to English
 
