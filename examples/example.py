@@ -47,17 +47,17 @@ def pig_latin_example():
 
 
 def baby_talk_example():
-    """Demonstrate all three Baby Talk intensity levels."""
+    """Demonstrate Baby Talk at all three intensity levels."""
     print("=== Baby Talk ===")
-    message = "Hello world, please bring water"
+    message = "Hello world please bring water"
 
     print(f"Original:     {message}")
+    print(f"Default:      {baby_talk(message)}")
 
     for intensity in range(3):
         print(f"Intensity {intensity}:  {baby_talk(message, intensity)}")
 
     print()
-
 
 def random_caps_example():
     """Demonstrate random capitalization."""
