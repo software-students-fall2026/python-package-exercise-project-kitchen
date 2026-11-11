@@ -14,6 +14,7 @@ from pyjokelang import (
     cat_talk,
     english_sentence_to_pig_latin,
     pig_latin_sentence_to_english,
+    ubbi_dubbi
 )
 
 
@@ -118,6 +119,20 @@ def cat_talk_example():
     print(f"Cat Talk:       {cat_talk(message)}")
     print()
 
+def ubbi_dubbi_example():
+    """Show Ubbi Dubbi with the default and a custom prefix."""
+    print("=== Ubbi Dubbi ===")
+    message = "Hello world"
+
+    print(f"Original:       {message}")
+    print(f"Default prefix: {ubbi_dubbi(message)}")
+    print(f"Prefix 'ob':    {ubbi_dubbi(message, prefix='ob')}")
+
+    # Silent e, the letter y, and capitalization
+    message = "Make my Apple"
+    print(f"Original:       {message}")
+    print(f"Ubbi Dubbi:     {ubbi_dubbi(message)}")
+    print()
 
 def main():
     """Run every example."""
@@ -126,7 +141,7 @@ def main():
     baby_talk_example()
     random_caps_example()
     cat_talk_example()
-
+    ubbi_dubbi_example()
 
 if __name__ == "__main__":
     main()

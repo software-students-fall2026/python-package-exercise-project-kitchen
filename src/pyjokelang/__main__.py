@@ -13,6 +13,7 @@ Commands:
     unscramble        gibberish -> text           scrambler.unscramble
     random-caps       text -> rAnDoM cApS         random_caps.random_caps
     cat-talk          text -> meow purr hiss      cat_talk.cat_talk
+    ubbi-dubbi        English -> Ubbi Dubbi       ubbi_dubbi.ubbi_dubbi
 
 Functions are looked up by name when a command runs, so a command whose
 function hasn't been written yet prints a friendly error instead of
@@ -172,6 +173,26 @@ def _add_cat_talk(subparsers):
         func=lambda args: _call("cat_talk", "cat_talk", _text(args))
     )
 
+def _add_ubbi_dubbi(subparsers):
+    """Register the 'ubbi-dubbi' command."""
+    parser = subparsers.add_parser(
+        "ubbi-dubbi",
+        help="translate English into Ubbi Dubbi",
+        description="Translate English into Ubbi Dubbi.",
+    )
+    _add_text_argument(parser)
+    parser.add_argument(
+        "-p",
+        "--prefix",
+        default="ub",
+        help="text inserted before each group of vowels (default: ub)",
+    )
+    parser.set_defaults(
+        func=lambda args: _call(
+            "ubbi_dubbi", "ubbi_dubbi", _text(args), prefix=args.prefix
+        )
+    )
+
 
 def _build_parser():
     """Create the argument parser with every command registered."""
@@ -187,6 +208,7 @@ def _build_parser():
     _add_unscramble(subparsers)
     _add_random_caps(subparsers)
     _add_cat_talk(subparsers)
+    _add_ubbi_dubbi(subparsers)
     return parser
 
 
