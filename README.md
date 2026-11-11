@@ -116,6 +116,32 @@ This separation makes the code easier to maintain, test, and extend.
 
 By using helper functions for capitalization and punctuation, we can modify individual behaviors without rewriting the entire translation process.
 
+### Punctuation Handling in Pig Latin
+
+Our Pig Latin translator intentionally keeps punctuation
+attached to the letters it originally appears next to,
+rather than moving punctuation to the end of the
+translated word.
+
+For example, if a word contains punctuation,
+we do not separate it from the word before
+applying the Pig Latin transformation.
+
+This means punctuation can end up in unexpected
+places after translation.
+
+We made this design decision for two reasons:
+
+1. **Simplicity:** Keeping punctuation attached
+   allows us to apply the same translation rules
+   without adding extra logic to extract and
+   reposition punctuation.
+
+2. **Silliness:** Since pyjokelang is designed
+   to create funny and unusual text, unexpected
+   punctuation placement adds to the playful
+   nature of the package.
+
 ### Translating Pig Latin Back to English
 
 `pig_latin_sentence_to_english` reverses the capitalization and punctuation transformations before translating each word back into English.
