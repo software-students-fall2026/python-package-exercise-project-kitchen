@@ -1,6 +1,10 @@
 """Tests for the pyjokelang command-line interface."""
 
+import runpy
+import sys
 from unittest.mock import patch
+
+import pytest
 
 from pyjokelang.__main__ import main
 from pyjokelang.cat_talk import CAT_SOUNDS
@@ -139,3 +143,76 @@ class Tests:
             f"Expected only cat sounds. Instead, it printed {out!r}"
         )
         assert len(out.split()) == 3, f"Expected 3 words. Instead, it printed {out!r}"
+
+    def test_no_command_shows_help(self, capsys):
+        """Running with no command prints the list of commands and exits with code 2."""
+        code, out, _ = run_cli(capsys)
+        assert code == 2, f"Expected exit code 2. Instead, it returned {code}"
+        assert "commands:" in out, f"Expected the help text. Instead, it printed {out!r}"
+        assert "scramble" in out and "baby-talk" in out, (
+            f"Expected every command to be listed. Instead, it printed {out!r}"
+        )
+
+    def test_help_option(self, capsys):
+        """--help prints usage information and exits with code 0."""
+        with pytest.raises(SystemExit) as exit_info:
+            main(["--help"])
+        assert exit_info.value.code == 0, (
+            f"Expected exit code 0. Instead, it exited with {exit_info.value.code}"
+        )
+        assert "usage: pyjokelang" in capsys.readouterr().out, "Expected the usage line"
+
+        with pytest.raises(SystemExit) as exit_info:
+            main(["scramble", "--help"])
+        assert exit_info.value.code == 0, "Expected a command's --help to exit with code 0"
+        assert "--key" in capsys.readouterr().out, "Expected scramble's help to list --key"
+
+    def test_bad_arguments(self, capsys):
+        """Unknown commands, missing text, and invalid options exit with code 2."""
+        for argv in (["shout", "hi"], ["scramble"], ["baby-talk", "hi", "-i", "5"]):
+            with pytest.raises(SystemExit) as exit_info:
+                main(argv)
+            assert exit_info.value.code == 2, (
+                f"Expected exit code 2 for {argv}. Instead, it exited with "
+                f"{exit_info.value.code}"
+            )
+            assert "error:" in capsys.readouterr().err, f"Expected an error message for {argv}"
+
+    def test_function_errors(self, capsys):
+        """Errors raised by a function are shown as a clean message with exit code 2."""
+        with pytest.raises(SystemExit) as exit_info:
+            main(["scramble", "hi", "--key", "123"])
+        assert exit_info.value.code == 2, (
+            f"Expected exit code 2. Instead, it exited with {exit_info.value.code}"
+        )
+        err = capsys.readouterr().err
+        assert "key must contain at least one letter" in err, (
+            f"Expected the ValueError message. Instead, it printed {err!r}"
+        )
+        assert "Traceback" not in err, "Expected no traceback in the error output"
+
+        with pytest.raises(SystemExit) as exit_info:
+            main(["baby-talk", "Hello, world!"])
+        assert exit_info.value.code == 2, "Expected exit code 2 for punctuation in baby talk"
+        assert "letters" in capsys.readouterr().err, "Expected baby talk's error message"
+
+    def test_missing_function(self, capsys, monkeypatch):
+        """A command whose function doesn't exist prints a friendly error and exits with code 1."""
+        monkeypatch.delattr("pyjokelang.scrambler.scramble")
+        code, out, err = run_cli(capsys, "scramble", "hi")
+        assert code == 1, f"Expected exit code 1. Instead, it returned {code}"
+        assert "scramble() hasn't been written yet" in err, (
+            f"Expected the not-written-yet message. Instead, it printed {err!r}"
+        )
+        assert out == "", f"Expected nothing on stdout. Instead, it printed {out!r}"
+
+    def test_run_as_module(self, capsys, monkeypatch):
+        """'python -m pyjokelang' runs the CLI and exits with its return code."""
+        monkeypatch.setattr(sys, "argv", ["pyjokelang", "scramble", "hi"])
+        monkeypatch.delitem(sys.modules, "pyjokelang.__main__", raising=False)
+        with pytest.raises(SystemExit) as exit_info:
+            runpy.run_module("pyjokelang", run_name="__main__")
+        assert exit_info.value.code == 0, (
+            f"Expected exit code 0. Instead, it exited with {exit_info.value.code}"
+        )
+        assert capsys.readouterr().out == "rq\n", "Expected the scrambled text 'rq'"
