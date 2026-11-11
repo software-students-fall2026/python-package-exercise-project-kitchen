@@ -100,6 +100,22 @@ This helper changes common sentence-ending punctuation.
 
 This transformation adds another layer of silliness to translated sentences.
 
+### Pig Latin Design Decisions
+
+### Design Decisions
+
+Our implementation prioritizes simplicity and readability over linguistic accuracy.
+
+For example, traditional Pig Latin sometimes moves an entire consonant cluster to the end of a word. Our translator only moves the first consonant.
+
+This makes the transformation easier to understand and allows the reverse translator to use a straightforward set of rules.
+
+We also chose to separate sentence translation from individual word translation.
+
+This separation makes the code easier to maintain, test, and extend.
+
+By using helper functions for capitalization and punctuation, we can modify individual behaviors without rewriting the entire translation process.
+
 ### Translating Pig Latin Back to English
 
 `pig_latin_sentence_to_english` reverses the capitalization and punctuation transformations before translating each word back into English.
