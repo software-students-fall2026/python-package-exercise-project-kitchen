@@ -5,3 +5,4 @@ from .cat_talk import cat_talk
 from .pig_latin import english_sentence_to_pig_latin, pig_latin_sentence_to_english
 from .random_caps import random_caps
 from .scrambler import scramble, unscramble
+from .ubbi_dubbi import ubbi_dubbi
