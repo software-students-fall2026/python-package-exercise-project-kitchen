@@ -63,9 +63,7 @@ If the `pyjokelang` command isn't found (for example on Windows, where pip's scr
 
 
 ## Pig Latin Rules
- 
-> Confirm with Jade in order to ensure our methods match each other and follow the same rules
- 
+  
 `to_pig_latin` and `from_pig_latin` follow these rules, so any text translated into Pig Latin can be translated back.
  
 ### Translating English to Pig Latin
@@ -104,6 +102,51 @@ For each translated word:
 | Apple-ay | Apple | the first letter doesn't change, so it stays a capital |
 | I-ay | I | a single-letter word keeps its capital |
 | Iet-quay | Quiet | `I` becomes lowercase and only `q` becomes a capital |
+
+
+### Examples
+
+```python
+from pyjokelang import (
+    english_sentence_to_pig_latin,
+    pig_latin_sentence_to_english
+)
+
+# Translate English into Pig Latin
+english_sentence_to_pig_latin("Hello world")
+# 'Ello-hay orld-way'
+
+english_sentence_to_pig_latin("Apple")
+# 'Apple-ay'
+
+english_sentence_to_pig_latin("Quiet")
+# 'Iet-quay'
+
+# Translate Pig Latin back into English
+pig_latin_sentence_to_english("Ello-hay orld-way")
+# 'Hello world'
+
+pig_latin_sentence_to_english("Apple-ay")
+# 'Apple'
+
+pig_latin_sentence_to_english("Iet-quay")
+# 'Quiet'
+
+# Empty strings
+english_sentence_to_pig_latin("")
+# ''
+
+pig_latin_sentence_to_english("")
+# ''
+```
+
+### From the Command Line
+
+```bash
+pyjokelang to-pig-latin "Hello world"
+pyjokelang from-pig-latin "Ello-hay orld-way"
+```
+
 
 ## Scramble and Unscramble
 
