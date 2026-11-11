@@ -1,119 +1,132 @@
-'''
-English to pig latin:
 
-Move the first letter to the end of the word and add -ay. 
+"""
+Example program that demonstrates the functions in pyjokelang.
 
-Unless the first letter is a vowel, then keep the word unchanged and add -ay.
+Run it from the project root with:
+    pipenv run python examples/example.py
+"""
 
-If the word ends in a vowel add -way instead.
-
-Use a helper function to reverse capital and lowercase letters. 
-
-Use a helper function to scramble punctuation.
-
-Use a helper function to translate full sentences.
-
-KNOWN ISSUE: For words with W, the pig latin to english doesn't work 
-
-(ex hello world -> ellohay orldway -> hello orld). 
-
-PROPOSED SOLUTION: Add dashes so we know where to split
-
-'''
-
-def english_word_to_pig_latin(text):
-    """Translate a single English word into Pig Latin."""
-    if not text:
-        return ""
-    vowels = "aeiou"
-    word = text
-    # if the first letter is a vowel, keep that here
-    if word[0].lower() in vowels:
-        pig_latin_word = word + "-way"
-    # if it's not a vowel, then add the first letter to the end and add ay
-    else:
-        pig_latin_word = word[1:] + word[0] + "-ay"
-    return pig_latin_word
-
-def english_sentence_to_pig_latin(text):
-    """Translate an entire English sentence into Pig Latin."""
-    translated_words = []
-    words = text.split()
-    for word in words:
-        translated_words.append(english_word_to_pig_latin(word))
-    translated_sentence = reverse_punctuation(" ".join(translated_words))
-    translated_sentence = reverse_capitalization(translated_sentence)
-    return translated_sentence
-
-def reverse_capitalization(text):
-    """This will turn all capital letters into lowercase and vice versa."""
-    reverse_capped_text = ""
-    for letter in text:
-        if letter.isupper():
-            reverse_capped_text += letter.lower()
-        elif letter.islower():
-            reverse_capped_text += letter.upper()
-        else:
-            reverse_capped_text += letter
-    return reverse_capped_text
+from pyjokelang import (
+    scramble,
+    unscramble,
+    baby_talk,
+    random_caps,
+    cat_talk,
+    english_sentence_to_pig_latin,
+    pig_latin_sentence_to_english,
+)
 
 
-def pig_latin_word_to_english(text):
-    """Translate a single Pig Latin word back into English."""
-    if not isinstance(text, str):
-        raise TypeError("text must be a string")
-    word = text
+def scramble_example():
+    """Show scramble() and unscramble(), with the default key and a secret key."""
+    print("=== Scramble and Unscramble ===")
+    message = "Meet me at noon!"
+    print(f"Original message:          {message}")
 
-    # if it ends in "-way", the word started with a vowel, so just remove the "-way"
-    if word.lower().endswith("-way") and len(word) > 4:
-        return word[:-4]
-    # otherwise remove the "-ay" and move the last letter back to the front
-    if word.lower().endswith("-ay") and len(word) > 3:
-        stem = word[:-3]
-        return stem[-1] + stem[:-1]
-    # anything else isn't Pig Latin, so leave it unchanged
-    return word
+    # With the default key, anyone with pyjokelang can unscramble it
+    scrambled = scramble(message)
+    print(f"Scrambled (default key):   {scrambled}")
+    print(f"Unscrambled:               {unscramble(scrambled)}")
 
-
-def pig_latin_sentence_to_english(text):
-    """Translate a full Pig Latin sentence back into English."""
-    if not isinstance(text, str):
-        raise TypeError("text must be a string")
-    # undo the sentence translator's helpers first
-    sentence = reverse_capitalization(text)
-    sentence = restore_punctuation(sentence)
-    translated_words = []
-    words = sentence.split()
-    for word in words:
-        translated_words.append(pig_latin_word_to_english(word)) #call helper
-
-    return " ".join(translated_words)
-
-def reverse_punctuation(text):
-    """This will turn ! into . and turn . into ? and ? to !."""
-    reversed_punctuation_text = ""
-    for character in text:
-        if character == "!":
-            reversed_punctuation_text += "."
-        elif character == ".":
-            reversed_punctuation_text += "?"
-        elif character == "?":
-            reversed_punctuation_text += "!"
-        else:
-            reversed_punctuation_text += character
-    return reversed_punctuation_text
+    # With a secret key, only someone who knows the key can unscramble it
+    secret = scramble(message, key="tacos")
+    print(f"Scrambled (key 'tacos'):   {secret}")
+    print(f"Unscrambled with 'tacos':  {unscramble(secret, key='tacos')}")
+    print(f"Unscrambled with 'pizza':  {unscramble(secret, key='pizza')}")
+    print()
 
 
-def restore_punctuation(text):
-    """Undo reverse_punctuation(): turn . back into !, ? back into . and ! back into ?."""
-    restored_punctuation_text = ""
-    for character in text:
-        if character == ".":
-            restored_punctuation_text += "!"
-        elif character == "?":
-            restored_punctuation_text += "."
-        elif character == "!":
-            restored_punctuation_text += "?"
-        else:
-            restored_punctuation_text += character
-    return restored_punctuation_text
+def pig_latin_example():
+    """Show English to Pig Latin translation and back."""
+    print("=== Pig Latin ===")
+
+    # Translate a full sentence
+    message = "Hello world"
+    translated = english_sentence_to_pig_latin(message)
+
+    print(f"Original:    {message}")
+    print(f"Pig Latin:   {translated}")
+    print(f"English:     {pig_latin_sentence_to_english(translated)}")
+    print()
+
+    # Demonstrate words starting with vowels
+    message = "Apple"
+    translated = english_sentence_to_pig_latin(message)
+
+    print(f"Original:    {message}")
+    print(f"Pig Latin:   {translated}")
+    print(f"English:     {pig_latin_sentence_to_english(translated)}")
+    print()
+
+    # Demonstrate punctuation changes
+    message = "Hello!"
+    translated = english_sentence_to_pig_latin(message)
+
+    print(f"Original:    {message}")
+    print(f"Pig Latin:   {translated}")
+    print(f"English:     {pig_latin_sentence_to_english(translated)}")
+    print()
+
+
+def baby_talk_example():
+    """Show Baby Talk at all three intensity levels."""
+    print("=== Baby Talk ===")
+    message = "Hello world please bring water"
+
+    print(f"Original:     {message}")
+
+    # Default intensity is 1
+    print(f"Default:      {baby_talk(message)}")
+
+    # Demonstrate each intensity level
+    for intensity in range(3):
+        translated = baby_talk(message, intensity)
+        print(f"Intensity {intensity}:  {translated}")
+
+    print()
+
+
+def random_caps_example():
+    """Show random capitalization."""
+    print("=== Random Capitalization ===")
+    message = "Hello world!"
+
+    print(f"Original:  {message}")
+
+    # Each call may produce a different result
+    print(f"Random 1:  {random_caps(message)}")
+    print(f"Random 2:  {random_caps(message)}")
+    print()
+
+
+def cat_talk_example():
+    """Show Cat Talk with default and custom sounds."""
+    print("=== Cat Talk ===")
+    message = "Hello world!"
+
+    print(f"Original:       {message}")
+
+    # Randomly choose from the default cat sounds
+    print(f"Default sounds: {cat_talk(message)}")
+
+    # Use a custom list of cat sounds
+    print(f"Custom sounds:  {cat_talk(message, sounds=['meow'])}")
+
+    # Demonstrate capitalization and punctuation
+    message = "I LOVE my cat."
+    print(f"Original:       {message}")
+    print(f"Cat Talk:       {cat_talk(message)}")
+    print()
+
+
+def main():
+    """Run every example."""
+    scramble_example()
+    pig_latin_example()
+    baby_talk_example()
+    random_caps_example()
+    cat_talk_example()
+
+
+if __name__ == "__main__":
+    main()
