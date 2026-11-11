@@ -2,14 +2,21 @@
 
 VOWELS = "aeiou"
 
+def is_vowel(word, i):
+    """True if the letter at position i acts as a vowel (y only sometimes)."""
+    char = word[i].lower()
+    if char in VOWELS:
+        return True
+    return char == "y" and i > 0 and word[i - 1].lower() not in VOWELS
+
 def find_vowels(word):
     """Return a (start, end) pair for each string of consecutive vowels."""
     vowel_string = []
     i = 0
     while i < len(word):
-        if word[i].lower() in VOWELS:
+        if is_vowel(word, i):
             start = i
-            while i < len(word) and word[i].lower() in VOWELS:
+            while i < len(word) and is_vowel(word, i):
                 i += 1
             vowel_string.append((start, i))
         else:
@@ -18,14 +25,13 @@ def find_vowels(word):
 
 def insert_prefix(prefix, vowel_string, start, uppercase):
     """Put prefix before a string of consecutive vowels matching the case"""
-    # can only insert prefix if start = False
     if uppercase:
         return prefix.upper() + vowel_string
+    # capital start moves prefix to front and capitalizes
     if start and vowel_string[0].isupper():
         return prefix.capitalize() + vowel_string.lower()
     return prefix.lower()+vowel_string
 
-# now need actual function to use insert prefix and convert each word to ubbi dubbi
 def convert_word(word, prefix):
     """Changes one word to Ubbi Dubbi"""
     vstr = find_vowels(word) # returns array of consecutive vowels
