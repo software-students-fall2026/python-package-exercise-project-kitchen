@@ -104,6 +104,7 @@ For each translated word:
 | Iet-quay | Quiet | `I` becomes lowercase and only `q` becomes a capital |
 
 
+
 ### Examples
 
 ```python
@@ -112,27 +113,18 @@ from pyjokelang import (
     pig_latin_sentence_to_english
 )
 
-# Translate English into Pig Latin
 english_sentence_to_pig_latin("Hello world")
-# 'Ello-hay orld-way'
+# 'ELLOh-AY ORLDW-AY'
 
-english_sentence_to_pig_latin("Apple")
-# 'Apple-ay'
-
-english_sentence_to_pig_latin("Quiet")
-# 'Iet-quay'
-
-# Translate Pig Latin back into English
-pig_latin_sentence_to_english("Ello-hay orld-way")
+pig_latin_sentence_to_english("ELLOh-AY ORLDW-AY")
 # 'Hello world'
 
-pig_latin_sentence_to_english("Apple-ay")
+english_sentence_to_pig_latin("Apple")
+# 'aPPLE-WAY'
+
+pig_latin_sentence_to_english("aPPLE-WAY")
 # 'Apple'
 
-pig_latin_sentence_to_english("Iet-quay")
-# 'Quiet'
-
-# Empty strings
 english_sentence_to_pig_latin("")
 # ''
 
