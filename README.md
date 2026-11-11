@@ -136,9 +136,11 @@ pig_latin_sentence_to_english("")
 
 ```bash
 pyjokelang to-pig-latin "Hello world"
-pyjokelang from-pig-latin "Ello-hay orld-way"
-```
+# eLLOh-AY ORLDw-AY
 
+pyjokelang from-pig-latin "eLLOh-AY ORLDw-AY"
+# Hello world
+```
 
 ## Scramble and Unscramble
 
