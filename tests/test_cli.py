@@ -47,3 +47,49 @@ class Tests:
 
         code, out, _ = run_cli(capsys, "unscramble", "F agehe vbh!gx n", "--key", "pizza")
         assert out != "Meet me at noon!\n", "Expected the wrong key not to restore the message"
+
+    def test_pig_latin(self, capsys):
+        """The Pig Latin commands translate in both directions."""
+        code, out, _ = run_cli(capsys, "to-pig-latin", "Hello, world!")
+        assert code == 0, f"Expected exit code 0. Instead, it returned {code}"
+        assert out == "ELLO,h-AY ORLD.W-AY\n", (
+            f"Expected the Pig Latin translation. Instead, it printed {out!r}"
+        )
+
+        code, out, _ = run_cli(capsys, "from-pig-latin", "ELLO,h-AY ORLD.W-AY")
+        assert code == 0, f"Expected exit code 0. Instead, it returned {code}"
+        assert out == "Hello, world!\n", (
+            f"Expected the English translation. Instead, it printed {out!r}"
+        )
+
+    def test_baby_talk(self, capsys):
+        """The baby-talk command uses intensity 1 by default and accepts --intensity."""
+        phrase = "The children love chocolate"
+        code, out, _ = run_cli(capsys, "baby-talk", phrase)
+        assert code == 0, f"Expected exit code 0. Instead, it returned {code}"
+        assert out == "The chiwdwen wobe chocowate\n", (
+            f"Expected intensity 1 by default. Instead, it printed {out!r}"
+        )
+
+        code, out, _ = run_cli(capsys, "baby-talk", phrase, "--intensity", "2")
+        assert out == "De tiwdwen wobe tocowate\n", (
+            f"Expected the intensity 2 translation. Instead, it printed {out!r}"
+        )
+
+        code, out, _ = run_cli(capsys, "baby-talk", "Water please", "-i", "0")
+        assert out == "Watew pwease\n", (
+            f"Expected intensity 0 to skip whole-word swaps. Instead, it printed {out!r}"
+        )
+
+    def test_ubbi_dubbi(self, capsys):
+        """The ubbi-dubbi command uses the 'ub' prefix by default and accepts --prefix."""
+        code, out, _ = run_cli(capsys, "ubbi-dubbi", "Hello world")
+        assert code == 0, f"Expected exit code 0. Instead, it returned {code}"
+        assert out == "Hubellubo wuborld\n", (
+            f"Expected the default 'ub' prefix. Instead, it printed {out!r}"
+        )
+
+        code, out, _ = run_cli(capsys, "ubbi-dubbi", "Hello world", "--prefix", "ob")
+        assert out == "Hobellobo woborld\n", (
+            f"Expected the custom 'ob' prefix. Instead, it printed {out!r}"
+        )
