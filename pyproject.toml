@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pyjokelang"
 description = "Translate English into silly joke languages like Pig Latin and Baby Talk, and back again."
-version = "0.1.0"
+version = "1.0.0"
 authors = [
   { name = "Jade Leong" },
   { name = "Risha Chada" },
